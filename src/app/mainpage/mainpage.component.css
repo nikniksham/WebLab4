@@ -1,0 +1,177 @@
+body {
+  /*настраиваем шрифт*/
+  font-family: Arial, Helvetica, "monospace";
+}
+
+img {
+  display: block;
+  margin: auto auto -20px;
+}
+
+img.tonko {
+  height: auto;
+  width: auto;
+  max-width: 280px;
+  max-height: 240px;
+}
+
+/*общие настройки сетки*/
+.grid {
+  /*рисуем зелёные рамки*/
+  border: 1px solid #2f2f2f;
+  /*подключаем сетку*/
+  display: grid;
+  /*формируем по 4 одинаковых строки и столбца*/
+  /*grid-template-columns: repeat(3, 606px);*/
+  grid-template-columns: 606px 1.3fr 3fr;
+}
+
+/*внешний вид ячеек*/
+.grid > * {
+  /*фоновый цвет*/
+  background-color: #b2b2b2;
+  /*скругление углов*/
+  border-radius: 5px;
+
+  /*расстояние от одной границы ячейки до другой*/
+  margin: 3px;
+
+}
+
+div.wrapper {
+  margin: 0.5% 1% 2% 1%; /*Отступы: Сверху справа снизу слева*/
+  width: 98%;
+}
+
+div.container {
+  padding: 3px 6px 3px 6px;
+  font-size: 18px;
+}
+
+canvas {
+  margin-bottom: -4px;
+  /*padding: 0;*/
+  /*margin: auto;*/
+  /*display: block;*/
+  /*width: 600px;*/
+}
+
+.my-form {
+  padding-bottom: 3px;
+}
+
+.btn {
+  min-width: 100%;
+  padding: 0 25px;
+  border: 1px solid rgba(162, 157, 157, 0.32);
+  border-radius: 5px;
+  line-height: 30px;
+  font-size: 18px;
+  color: #444;
+  background-color: #ffffff;
+  /*box-shadow: 0 4px 6px rgb(65 132 144 / 10%), 0 1px 3px rgb(0 0 0 / 8%);*/
+  user-select: none;
+}
+
+.btn:hover {
+  transition: all 0.2s;
+  box-shadow: 0 7px 14px rgb(65 132 144 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
+}
+
+.btn:active {
+  background-color: #808080;
+}
+
+.btn:disabled {
+  background-color: #eee;
+  border-color: #eee;
+  color: #444;
+  cursor: not-allowed;
+}
+
+.custom {
+  display: flex;
+  padding-bottom: inherit;
+}
+
+.custom label {
+  white-space: nowrap;
+  padding-right: 1%;
+}
+
+div.pad_bot {
+  padding-bottom: 3px;
+}
+
+.custom select, .custom input {
+  flex: 1 1;
+}
+
+div.table {
+  height: 597px;
+  overflow-y: auto;
+  margin-bottom: -6px;
+}
+
+table {
+  border: 1px solid #333;
+  width: 100%;
+}
+
+td {
+  border: 2px solid #000000;
+}
+
+thead, tfoot {
+  background-color: #333;
+  color: #fff;
+}
+
+.crop {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 20px;
+  padding: 3px 3px 3px 3px;
+}
+
+header {
+  margin: 0 1% 0 1%; /*Отступы: Сверху справа снизу слева*/
+  width: 98%;
+  background: #b2b2b2;
+  border-radius: 5px;
+}
+
+.header {
+  padding: 1px 1% 1% 1%;
+}
+
+.hea-2 .header {
+  padding: 0 0 0 1%;
+}
+
+p.sad:first-line {
+  font-weight: bold;
+}
+
+h1 {
+  color: red;
+}
+
+.main_header_h1 {
+  color: black;
+}
+
+#form_error {
+  margin-top: 3px;
+  margin-bottom: -5px;
+}

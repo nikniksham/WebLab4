@@ -1,0 +1,43 @@
+<h2>Страница тестового контента</h2>
+
+
+<h1>Добро пожаловать {{name}}!</h1>
+<label>Введите имя:</label>
+<input type="text" [(ngModel)]="name" />
+
+<h1>Добавить юзера</h1>
+<div>
+  <p>
+    <label>Имя юзера</label><br>
+    <input [(ngModel)]="user_name" />
+  </p>
+  <p>
+    <label>Его мыло (без домена)</label><br>
+    <input [(ngModel)]="user_email" />
+  </p>
+  <button (click)="addNewUser(user_name, user_email)">Добавить</button>
+  <button (click)="requestUsers()">Запрос на сервер</button>
+  <button (click)="deleteSelectedUsers()">Удалить юзеров</button>
+</div>
+
+<h1>Список пользователей</h1>
+<table>
+  <thead>
+  <tr>
+    <th>АйДи</th>
+    <th>Имя</th>
+    <th>Мыло</th>
+    <th>Херь</th>
+  </tr>
+  </thead>
+  <tbody>
+  @for (user of users; track user.name) {
+  <tr>
+      <td>{{user.id}}</td>
+          <td>{{user.name}}</td>
+          <td>{{user.email}}</td>
+          <td><input type="checkbox" [(ngModel)]="user.hernya" /></td>
+      </tr>
+  }
+  </tbody>
+</table>
