@@ -1,9 +1,9 @@
-import {Component, ElementRef, ViewChild} from '@angular/core'
+import {Component, ElementRef, ViewChild } from '@angular/core'
 import {AppComponent} from "../app.component"
 import {MainpageService} from "./mainpage.service";
 import {HttpClientModule} from "@angular/common/http";
-import {FormsModule} from "@angular/forms";
-import { DropdownModule } from 'primeng/dropdown';
+import {FormsModule, FormBuilder, Validators, ReactiveFormsModule } from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 class ResOfHit{
   constructor(public res_id: number, public x: number, public y: number, public r: number, public res: boolean, public ex_at: Date, public ex_ti: number) {}
@@ -14,19 +14,53 @@ class ResOfHit{
 @Component({
   selector: 'app-mainpage',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, DropdownModule],
+  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule ],
   templateUrl: './mainpage.component.html',
   styleUrl: './mainpage.component.css',
   providers: [AppComponent, MainpageService],
-
 })
 export class MainpageComponent {
+  isSubmitted = false;
+  City: any = ['3', '2', '1'];
+  registrationForm = this.fb.group({
+    cityName: ['', [Validators.required]],
+  });
+  changeCity(e: any) {
+    this.cityName?.setValue(e.target.value, {
+      onlySelf: true,
+    });
+    // console.log(e.target.value.toString().charAt(3))
+    let newr = e.target.value.toString().charAt(3)
+    if (newr != "") {
+      this.grid.r = newr
+    } else {
+      this.grid.r = 4
+    }
+    this.grid.draw()
+  }
+
+  // Access formcontrols getter
+  get cityName() {
+    return this.registrationForm.get('cityName');
+  }
+
+  test() {
+    console.log("saffasfasfsafsafas")
+  }
+
+  onSubmit(): void {
+    console.log(this.registrationForm);
+    this.isSubmitted = true;
+    if (!this.registrationForm.valid) {
+      false;
+    } else {
+      console.log(JSON.stringify(this.registrationForm.value));
+    }
+  }
+
   grid: Grid
   x_pole: number
   y_pole: number
-
-  R_variables = ["1", "2", "3", "4"]
-  R_selected = "3"
 
   list_resOfHit = []
 
@@ -35,29 +69,35 @@ export class MainpageComponent {
       this.appComponent.getRouter().navigate(["/login-page"])
     }
 
-    this.grid = new Grid(600, 600, 3, this.myCanvas.nativeElement.getContext("2d"))
+    this.grid = new Grid(600, 600, 4, this.myCanvas.nativeElement.getContext("2d"))
     this.grid.draw();
+
+    this.getAllPoints()
   }
 
-  constructor(private appComponent: AppComponent, private mainpageService: MainpageService){}
+  constructor(private appComponent: AppComponent, private mainpageService: MainpageService, public fb: FormBuilder) {}
 
   @ViewChild('canvas', {static: true}) myCanvas!: ElementRef
 
   getAllPoints() {
-    // Realizovat
+    this.mainpageService.getData(this.appComponent.getToken()).subscribe({
+      next:(data:any) => {
+        // console.log(data)
+        this.grid.setPoints(data)
+      }
+    })
   }
 
-  addPointToTable(resOfHit: ResOfHit) {
-    // Realizovat
+  addPointToTable() {
+    this.mainpageService.postData(this.appComponent.getToken(), this.grid.point_coords[0], this.grid.point_coords[1], this.grid.r).subscribe(() => {this.getAllPoints()})
   }
 
   deleteAllPoints() {
-    // Realizovat
+    this.mainpageService.deleteData(this.appComponent.getToken()).subscribe(() => {this.getAllPoints()})
   }
 
   setNewR(newR: number) {
     this.grid.r = newR
-    console.log("wasfsafafs")
   }
 
   check_num_ogr(min_value: number, max_value: number, num: number): number {
@@ -96,9 +136,12 @@ export class MainpageComponent {
 
       this.x_pole = x_coords;
       this.y_pole = y_coords;
-      res = this.grid.trans_coords_to_canvas(x_coords, y_coords);
+      // res = this.grid.trans_coords_to_canvas(x_coords, y_coords);
       // grid.point_coords = [res[0], res[1], inPrimitive(x_coords, y_coords, grid.r)];
       this.grid.point_coords = [res[0], res[1], 2];
+      // console.log(res)
+      this.addPointToTable();
+
       this.grid.draw();
     }
   }
@@ -110,7 +153,7 @@ class Grid {
   r
   raz
   need_cross = true
-  point_coords
+  point_coords = [-100, -100, 1]
   scale = 11
   ssx
   ssy
@@ -118,6 +161,8 @@ class Grid {
   mouse_on_canvas = false
   mouse_coords = [-10, -10]
   ctx
+
+  points = []
 
   min_x = -5
   max_x = 5
@@ -148,19 +193,38 @@ class Grid {
     if (this.mouse_on_canvas) {
       this.drawCross()
     }
-    this.drawPoint()
+    this.drawAllPoints()
+    // this.drawPoint(...this.point_coords)
+    // this.drawPoint(this.point_coords[0], this.point_coords[1], this.point_coords[2])
   }
 
-  drawPoint() {
+  setPoints(points: any) {
+    points.reverse()
+    this.points = points
+    this.draw()
+  }
+
+  drawAllPoints() {
+    this.points.forEach((point: any) => {
+      // console.log(point.x + " " + point.y)
+      if (this.r == point.r) {
+        let r = this.trans_coords_to_canvas(point.x, point.y)
+        this.drawPoint(r[0], r[1], point.res)
+      }
+      // this.drawPoint(point.x, point.y, point.r)
+    })
+  }
+
+  drawPoint(x: any, y:any, res: any) {
     this.ctx.beginPath()
     this.ctx.fillStyle = "#ffe300"
-    if (this.point_coords[2] === 0) {
+    if (!res) {
       this.ctx.fillStyle = "#f00"
-    } else if (this.point_coords[2] === 1) {
+    } else if (res) {
       this.ctx.fillStyle = "#0f0"
     }
 
-    this.ctx.arc(this.point_coords[0], this.point_coords[1], this.raz / 1.5, 0, Math.PI * 2, true)
+    this.ctx.arc(x, y, this.raz / 1.5, 0, Math.PI * 2, true)
     this.ctx.fill()
     this.ctx.stroke()
     this.ctx.fillStyle = "#000"
@@ -203,7 +267,7 @@ class Grid {
     // Четвертькруг
     this.ctx.fillStyle = "#15b3e8"
     this.ctx.beginPath()
-    this.ctx.arc(x, y, this.size_x / this.scale / 2 * this.r, -Math.PI / 2, Math.PI, true)
+    this.ctx.arc(x, y, this.size_x / this.scale * this.r, -Math.PI / 2, Math.PI, true)
     this.ctx.lineTo(x, y)
     this.ctx.fill()
 
@@ -211,14 +275,14 @@ class Grid {
     this.ctx.beginPath()
     this.ctx.moveTo(x, y)
     this.ctx.lineTo(...this.trans_coords(this.size_x / this.scale * this.r / 2, 0))
-    this.ctx.lineTo(...this.trans_coords(this.size_x / this.scale * this.r / 2, -this.size_y / this.scale * this.r))
-    this.ctx.lineTo(...this.trans_coords(0, -this.size_y / this.scale * this.r))
+    this.ctx.lineTo(...this.trans_coords(this.size_x / this.scale * this.r / 2, this.size_y / this.scale * this.r))
+    this.ctx.lineTo(...this.trans_coords(0, this.size_y / this.scale * this.r))
     this.ctx.fill()
 
     // Треугольник
     this.ctx.beginPath()
     this.ctx.moveTo(x, y)
-    this.ctx.lineTo(...this.trans_coords(this.size_x / this.scale * this.r, 0))
+    this.ctx.lineTo(...this.trans_coords(-this.size_x / this.scale * this.r / 2, 0))
     this.ctx.lineTo(...this.trans_coords(0, this.size_y / this.scale * this.r))
     this.ctx.fill()
 

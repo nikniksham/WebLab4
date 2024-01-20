@@ -1,0 +1,17 @@
+@media screen and (max-width: 778px) {
+  #padla {
+    color: crimson;
+  }
+}
+
+@media screen and (max-width: 1223px) and (min-width: 779px) {
+  #padla {
+    color: #1cc744;
+  }
+}
+
+@media screen and (min-width: 1224px) {
+  #padla {
+    color: #16a3ce;
+  }
+}

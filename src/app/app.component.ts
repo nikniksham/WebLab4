@@ -7,10 +7,11 @@ import {CookieService} from "ngx-cookie-service";
   standalone: true,
   imports: [RouterOutlet],
   template: `<div>
-                    <h1>Приложение Angular</h1>
+                    <h1 id="padla">Приложение Angular</h1>
                     <button (click)="doSmbd()">{{action}}</button>
                     <router-outlet></router-outlet>
                </div>`,
+  styleUrl: './app.component.css',
   providers: [CookieService, Router],
 })
 export class AppComponent {

@@ -27,7 +27,7 @@
           наше время, кто знает, почему это так интересно и необычно)))
         </p>
         <div class="custom">
-          <label for="size_r">Параметр R:</label>
+<!--          <label for="size_r">Параметр R:</label>-->
 <!--          <select name="size_r" id="size_r" class="my-select">-->
 <!--            <option value="1" (select)="setNewR(1)">1</option>-->
 <!--            <option value="1.5" (select)="setNewR(1.5)">1.5</option>-->
@@ -35,20 +35,32 @@
 <!--            <option value="2.5" (select)="setNewR(2.5)">2.5</option>-->
 <!--            <option value="3" (select)="setNewR(3)" selected>3</option>-->
 <!--          </select>-->
-          <p-dropdown [options]="R_variables" [(ngModel)]="R_selected" optionLabel="name" [showClear]="true" placeholder="Select a City" id="size_r"></p-dropdown>
+          <div class="container mt-5">
+            <div class="row custom-wrapper">
+              <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+                <label for="cityName">Выберите R:</label><br>
+                <div class="d-grid">
+                  <select class="custom-select mb-3" (change)="changeCity($event)" formControlName="cityName" id="cityName">
+                    <option value="">4</option>
+                    <option *ngFor="let city of City" [ngValue]="city">{{ city }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
-        <div class="custom">
-          <label for="x_coords">X координата:</label>
-          <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -2.99999999, 4.99999999, 0)" placeholder="X (-3; 5)"/>
-        </div>
+<!--        <div class="custom">-->
+<!--          <label for="x_coords">X координата:</label>-->
+<!--          <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -2.99999999, 4.99999999, 0)" placeholder="X (-3; 5)"/>-->
+<!--        </div>-->
 
-        <div class="custom">
-          <label for="y_coords">Y координата:</label>
-          <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -4.99999999, 2.99999999, 1)" placeholder="Y (-5; 3)"/>
-        </div>
-        <button class="btn" onclick="request_to_php()">Есть пробитие?</button>
-        <button class="btn" onclick="clear_table()">Очистить табличку</button>
+<!--        <div class="custom">-->
+<!--          <label for="y_coords">Y координата:</label>-->
+<!--          <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -4.99999999, 2.99999999, 1)" placeholder="Y (-5; 3)"/>-->
+<!--        </div>-->
+<!--        <button class="btn" onclick="request_to_php()">Есть пробитие?</button>-->
+        <button class="btn" (click)="deleteAllPoints()">Очистить табличку</button>
         <h5 id="form_error"></h5>
       </div>
     </div>
@@ -66,7 +78,14 @@
           </tr>
           </thead>
           <tbody id="suda">
-
+          <tr *ngFor="let point of grid.points">
+            <th colspan="1" style="width: 10%">{{point.x}}</th>
+            <th colspan="1" style="width: 10%">{{point.y}}</th>
+            <th colspan="1" style="width: 5%">{{point.r}}</th>
+            <th colspan="1" style="width: 15%">{{point.res}}</th>
+            <th colspan="1" style="width: 35%">{{point.ex_at}}</th>
+            <th colspan="1" style="width: 35%">{{point.ex_ti}}</th>
+          </tr>
           </tbody>
         </table>
       </div>

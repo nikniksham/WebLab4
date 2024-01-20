@@ -19,6 +19,7 @@ export class MainpageService{
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     })
+    // console.log(x + " " + y + " " + r)
     return this.http.post("http://localhost:8090/resOfHit", {"x": x, "y": y, "r": r}, {headers})
   }
 
