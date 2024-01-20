@@ -1,0 +1,30 @@
+spring:
+  datasource.url: jdbc:postgresql://localhost/DataLab4
+  datasource.username: postgres
+  datasource.password: root
+  jpa.show-sql: true
+  jpa.generate-ddl: false
+  jpa.hibernate.ddl-auto: update
+  jpa.properties:
+    hibernate.jdbc.lob.non_contextual_creation: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/lab4-realm
+
+server:
+  port: 8090
+
+#keycloak:
+#  realm: lab4-realm
+#  auth-server-url: http://127.0.0.1:8080/auth
+#  ssl-required: external
+#  resource: base-client
+#  #public-client = true
+#  use-resource-role-mappings: true
+#
+#  credentials:
+#    secret: aSRy9xjXayP0KX5pIIqL9aIDAL7GGQNJ
+#  #keycloak.enabled = false
