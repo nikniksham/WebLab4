@@ -11,8 +11,6 @@
   </div>
 </header>
 
-<h2>Страница главного контента</h2>
-
 <div class="wrapper">
   <div class="grid">
     <div>
@@ -26,23 +24,24 @@
           поймут в чём же дело и как сложен js))) Действительно тонко))) Не так уж много и образованных в
           наше время, кто знает, почему это так интересно и необычно)))
         </p>
+
+        <div style="padding-left: 6px; margin-top: -0px">
+          <label for="y_slider">Выберите Y:</label>
+          <mat-slider id="y_slider" min="-4" max="4" step="0.01" value="-4">
+            <input matSliderThumb (valueChange)="changeY($event)">
+          </mat-slider>
+          ({{y_point}})
+        </div>
+
         <div class="custom">
-<!--          <label for="size_r">Параметр R:</label>-->
-<!--          <select name="size_r" id="size_r" class="my-select">-->
-<!--            <option value="1" (select)="setNewR(1)">1</option>-->
-<!--            <option value="1.5" (select)="setNewR(1.5)">1.5</option>-->
-<!--            <option value="2" (select)="setNewR(2)">2</option>-->
-<!--            <option value="2.5" (select)="setNewR(2.5)">2.5</option>-->
-<!--            <option value="3" (select)="setNewR(3)" selected>3</option>-->
-<!--          </select>-->
           <div class="container mt-5">
             <div class="row custom-wrapper">
-              <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-                <label for="cityName">Выберите R:</label><br>
+              <form [formGroup]="XForm" (ngSubmit)="onSubmitX()">
+                <label for="x_sel">Выберите X:</label><br>
                 <div class="d-grid">
-                  <select class="custom-select mb-3" (change)="changeCity($event)" formControlName="cityName" id="cityName">
+                  <select class="custom-select mb-3" (change)="changeX($event)" formControlName="x_sel" id="x_sel">
                     <option value="">4</option>
-                    <option *ngFor="let city of City" [ngValue]="city">{{ city }}</option>
+                    <option *ngFor="let x of X_variables" [ngValue]="x">{{ x }}</option>
                   </select>
                 </div>
               </form>
@@ -50,16 +49,32 @@
           </div>
         </div>
 
+        <div class="custom">
+          <div class="container mt-5">
+            <div class="row custom-wrapper">
+              <form [formGroup]="radiusForm" (ngSubmit)="onSubmitRadius()">
+                <label for="radius">Выберите R:</label><br>
+                <div class="d-grid">
+                  <select class="custom-select mb-3" (change)="changeRadius($event)" formControlName="radius" id="radius">
+                    <option value="">4</option>
+                    <option *ngFor="let rad of Radiusi" [ngValue]="rad">{{ rad }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 <!--        <div class="custom">-->
 <!--          <label for="x_coords">X координата:</label>-->
 <!--          <input type="text" id="x_coords" min="-3" max="5" name="x_coords" class="my-input" oninput="change_input_field(this, -2.99999999, 4.99999999, 0)" placeholder="X (-3; 5)"/>-->
 <!--        </div>-->
 
 <!--        <div class="custom">-->
-<!--          <label for="y_coords">Y координата:</label>-->
+<!--          <label for="y_coords"y_coords>Y координата:</label>-->
 <!--          <input type="text" id="y_coords" min="-5" max="3" name="y_coords" class="my-input" oninput="change_input_field(this, -4.99999999, 2.99999999, 1)" placeholder="Y (-5; 3)"/>-->
 <!--        </div>-->
 <!--        <button class="btn" onclick="request_to_php()">Есть пробитие?</button>-->
+        <button class="btn" (click)="addPointToTable()">Есть пробитие</button>
         <button class="btn" (click)="deleteAllPoints()">Очистить табличку</button>
         <h5 id="form_error"></h5>
       </div>
@@ -69,22 +84,22 @@
         <table>
           <thead>
           <tr>
-            <th colspan="1" style="width: 10%">X</th>
-            <th colspan="1" style="width: 10%">Y</th>
-            <th colspan="1" style="width: 5%">R</th>
-            <th colspan="1" style="width: 15%">Результат</th>
-            <th colspan="1" style="width: 35%">Выполнен в</th>
-            <th colspan="1" style="width: 35%">Время выполнения</th>
+            <th colspan="1" style="width: 15%">X</th>
+            <th colspan="1" style="width: 15%">Y</th>
+            <th colspan="1" style="width: 3%">R</th>
+            <th colspan="1" style="width: 7%">Результат</th>
+            <th colspan="1" style="width: 50%">Выполнен в</th>
+            <th colspan="1" style="width: 10%">Время выполнения</th>
           </tr>
           </thead>
           <tbody id="suda">
           <tr *ngFor="let point of grid.points">
-            <th colspan="1" style="width: 10%">{{point.x}}</th>
-            <th colspan="1" style="width: 10%">{{point.y}}</th>
-            <th colspan="1" style="width: 5%">{{point.r}}</th>
-            <th colspan="1" style="width: 15%">{{point.res}}</th>
-            <th colspan="1" style="width: 35%">{{point.ex_at}}</th>
-            <th colspan="1" style="width: 35%">{{point.ex_ti}}</th>
+            <th colspan="1" style="width: 15%">{{point.x}}</th>
+            <th colspan="1" style="width: 15%">{{point.y}}</th>
+            <th colspan="1" style="width: 3%">{{point.r}}</th>
+            <th colspan="1" style="width: 7%">{{point.res}}</th>
+            <th colspan="1" style="width: 50%">{{point.ex_at}}</th>
+            <th colspan="1" style="width: 10%">{{point.ex_ti}}</th>
           </tr>
           </tbody>
         </table>

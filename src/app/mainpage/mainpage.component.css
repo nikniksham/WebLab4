@@ -15,15 +15,31 @@ img.tonko {
   max-height: 240px;
 }
 
-/*общие настройки сетки*/
-.grid {
-  /*рисуем зелёные рамки*/
-  border: 1px solid #2f2f2f;
-  /*подключаем сетку*/
-  display: grid;
-  /*формируем по 4 одинаковых строки и столбца*/
-  /*grid-template-columns: repeat(3, 606px);*/
-  grid-template-columns: 606px 1.3fr 3fr;
+@media screen and (max-width: 778px) {
+  /*общие настройки сетки*/
+  .grid {
+    border: 1px solid #2f2f2f;
+    display: grid;
+    grid-template-columns: 606px;
+  }
+}
+
+@media screen and (max-width: 1223px) and (min-width: 779px) {
+  /*общие настройки сетки*/
+  .grid {
+    border: 1px solid #2f2f2f;
+    display: grid;
+    grid-template-columns: 606px 1.3fr;
+  }
+}
+
+@media screen and (min-width: 1224px) {
+  /*общие настройки сетки*/
+  .grid {
+    border: 1px solid #2f2f2f;
+    display: grid;
+    grid-template-columns: 606px 1.3fr 3fr;
+  }
 }
 
 /*внешний вид ячеек*/
@@ -92,6 +108,7 @@ canvas {
 .custom {
   display: flex;
   padding-bottom: inherit;
+  margin-top: -65px;
 }
 
 .custom label {

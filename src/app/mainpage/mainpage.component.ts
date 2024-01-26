@@ -1,68 +1,97 @@
-import {Component, ElementRef, ViewChild } from '@angular/core'
+import {Component, ElementRef, ViewChild, NgModule } from '@angular/core'
 import {AppComponent} from "../app.component"
 import {MainpageService} from "./mainpage.service";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, FormBuilder, Validators, ReactiveFormsModule } from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import { MatSliderModule } from '@angular/material/slider';
 
 class ResOfHit{
   constructor(public res_id: number, public x: number, public y: number, public r: number, public res: boolean, public ex_at: Date, public ex_ti: number) {}
+
+  getTime() {
+    return this.ex_at
+  }
 }
-
-
 
 @Component({
   selector: 'app-mainpage',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule ],
+  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule, MatSliderModule ],
   templateUrl: './mainpage.component.html',
   styleUrl: './mainpage.component.css',
   providers: [AppComponent, MainpageService],
 })
 export class MainpageComponent {
-  isSubmitted = false;
-  City: any = ['3', '2', '1'];
-  registrationForm = this.fb.group({
-    cityName: ['', [Validators.required]],
+  test() {
+    console.log("safsafasfsa")
+  }
+
+  x_point = 4
+  y_point = -4
+
+
+  Radiusi: any = ['3', '2', '1'];
+  radiusForm = this.fb.group({
+    radius: ['', [Validators.required]],
   });
-  changeCity(e: any) {
-    this.cityName?.setValue(e.target.value, {
+  changeRadius(e: any) {
+    this.radius?.setValue(e.target.value, {
       onlySelf: true,
     });
-    // console.log(e.target.value.toString().charAt(3))
     let newr = e.target.value.toString().charAt(3)
-    if (newr != "") {
-      this.grid.r = newr
-    } else {
-      this.grid.r = 4
-    }
+    if (newr != "") { this.grid.r = newr } else { this.grid.r = 4 }
     this.grid.draw()
   }
-
-  // Access formcontrols getter
-  get cityName() {
-    return this.registrationForm.get('cityName');
+  get radius() {
+    return this.radiusForm.get('radius');
   }
-
-  test() {
-    console.log("saffasfasfsafsafas")
-  }
-
-  onSubmit(): void {
-    console.log(this.registrationForm);
-    this.isSubmitted = true;
-    if (!this.registrationForm.valid) {
+  onSubmitRadius(): void {
+    console.log(this.radiusForm);
+    if (!this.radiusForm.valid) {
       false;
     } else {
-      console.log(JSON.stringify(this.registrationForm.value));
+      console.log(JSON.stringify(this.radiusForm.value));
     }
+  }
+
+
+  X_variables: any = ['3', '2', '1', '0', '-1', '-2', '-3', '-4'];
+  XForm = this.fb.group({
+    x_sel: ['', [Validators.required]],
+  });
+  changeX(e: any) {
+    this.x_sel?.setValue(e.target.value, {
+      onlySelf: true,
+    });
+    let new_x = e.target.value.toString().slice(3, 5)
+    if (new_x != "") { this.x_point = new_x } else { this.x_point = 4 }
+    this.grid.point_coords[0] = this.x_point
+    console.log(new_x)
+    this.grid.draw()
+  }
+  get x_sel() {
+    return this.XForm.get('x_sel');
+  }
+  onSubmitX(): void {
+    console.log(this.XForm);
+    if (!this.XForm.valid) {
+      false;
+    } else {
+      console.log(JSON.stringify(this.XForm.value));
+    }
+  }
+
+  // Slider
+  changeY(ev: any) {
+    this.y_point = ev
+    this.grid.point_coords[1] = this.y_point
+    this.grid.draw()
   }
 
   grid: Grid
   x_pole: number
   y_pole: number
-
-  list_resOfHit = []
 
   ngOnInit() {
     if (!this.appComponent.isAuth()) {
@@ -153,7 +182,7 @@ class Grid {
   r
   raz
   need_cross = true
-  point_coords = [-100, -100, 1]
+  point_coords = [4, -4]
   scale = 11
   ssx
   ssy
@@ -161,8 +190,7 @@ class Grid {
   mouse_on_canvas = false
   mouse_coords = [-10, -10]
   ctx
-
-  points = []
+  points: ResOfHit[] = []
 
   min_x = -5
   max_x = 5
@@ -174,7 +202,7 @@ class Grid {
     this.size_y = size_y
     this.r = r
     this.raz = this.size_x / 60
-    this.point_coords = [-this.raz, -this.raz, 2]
+    // this.point_coords = [-this.raz, -this.raz, 2]
     this.scale = 11 // кол-во ступеней в сетке
     this.ssx = this.size_x / this.scale
     this.ssy = this.size_y / this.scale
@@ -205,6 +233,8 @@ class Grid {
   }
 
   drawAllPoints() {
+    let r = this.trans_coords_to_canvas(this.point_coords[0], this.point_coords[1])
+    this.drawPoint(r[0], r[1], 2)
     this.points.forEach((point: any) => {
       // console.log(point.x + " " + point.y)
       if (this.r == point.r) {
@@ -218,9 +248,9 @@ class Grid {
   drawPoint(x: any, y:any, res: any) {
     this.ctx.beginPath()
     this.ctx.fillStyle = "#ffe300"
-    if (!res) {
+    if (res == 0) {
       this.ctx.fillStyle = "#f00"
-    } else if (res) {
+    } else if (res == 1) {
       this.ctx.fillStyle = "#0f0"
     }
 
@@ -348,22 +378,6 @@ class Grid {
       }
     }
     this.ctx.stroke()
-  }
-
-  draw_point(x: number, y: number, s: number) {
-    this.ctx.beginPath()
-    this.ctx.fillStyle = "#ffe300"
-    if (s === 0) {
-      this.ctx.fillStyle = "#f00"
-    } else if (s === 1) {
-      this.ctx.fillStyle = "#0f0"
-    }
-
-    let r = this.trans_coords_to_canvas(x, y)
-    this.ctx.arc(r[0], r[1], this.raz / 1.5, 0, Math.PI * 2, true)
-    this.ctx.fill()
-    this.ctx.stroke()
-    this.ctx.fillStyle = "#000"
   }
 
   trans_coords(x: number, y: number) {

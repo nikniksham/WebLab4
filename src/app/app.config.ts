@@ -7,6 +7,7 @@ import {LoginPageComponent} from "./login-page/login-page.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {MainpageComponent} from "./mainpage/mainpage.component";
 import {SpecialComponent} from "./special/special.component";
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login-page', pathMatch: 'full' },
@@ -19,5 +20,5 @@ const appRoutes: Routes = [
 ];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(appRoutes)]
+  providers: [provideRouter(appRoutes), provideAnimations()]
 };
