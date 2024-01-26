@@ -24,7 +24,7 @@ public class ResOfHitController {
         long scriptStartTime = System.nanoTime();
         float x = resOfHit.getX(), y = resOfHit.getY(), r = resOfHit.getR();
         resOfHit.setRes((x <= 0 && y >= 0 && x*x + y*y <= r*r) || (x <= 0 && y <= 0 && y >= -x * 2 - r && x >= -r / 2 - 2) || (x >= 0 && y <= 0 && x <= r/2 && y >= -r));
-        resOfHit.setEx_at(new Timestamp(new java.util.Date().getTime()));
+        resOfHit.setEx_at(new Timestamp(new java.util.Date().getTime() + 10800000));
         resOfHit.setEx_ti((int) (System.nanoTime() - scriptStartTime));
         resOfHitRepository.save(resOfHit);
     }
